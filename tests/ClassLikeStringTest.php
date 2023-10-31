@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Psalm\Tests;
 
 use Psalm\Config;
@@ -610,6 +612,18 @@ class ClassLikeStringTest extends TestCase
                     if (!class_exists(A::class)) {
                         new \RuntimeException();
                     }',
+            ],
+            'convertToStringClassExistsNegated' => [
+                'code' => '<?php
+                    /** @param class-string $className */
+                    $className = stdClass::class;
+                    if (class_exists($className)) {
+                        throw new \RuntimeException($className);
+                    }',
+                'assertions' => [
+                    '$className===' => 'string',
+                ],
+
             ],
             'createNewObjectFromGetClass' => [
                 'code' => '<?php
